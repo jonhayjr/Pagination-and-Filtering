@@ -10,16 +10,17 @@ For assistance:
    Check out the "Project Resources" section of the Instructions tab: https://teamtreehouse.com/projects/data-pagination-and-filtering#instructions
    Reach out in your Slack community: https://treehouse-fsjs-102.slack.com/app_redirect?channel=unit-2
 */
-
+//Total number of items to display on the page
+const pageCount = 9;
 
 
 /*
 Create the `showPage` function
 This function will create and insert/append the elements needed to display a "page" of nine students
 */
-const showPage = (list, page) => {
-   const startIndex = (page * 9) - 9;
-   const endIndex = (page * 9);
+const showPage = (list, page, numPerPage) => {
+   const startIndex = (page * pageCount) - pageCount;
+   const endIndex = (page * pageCount);
    const studentList = document.querySelector('ul.student-list');
 
    //Remove any students that are currently on the page
@@ -27,6 +28,7 @@ const showPage = (list, page) => {
    let studentHTML = '';
 
    for (let i = 0; i < list.length; i++) {
+      //Add students based on start and end index.
       if (i >= startIndex && i < endIndex) {
          studentHTML += `
       <li class="student-item cf">
@@ -43,6 +45,7 @@ const showPage = (list, page) => {
       }
    }
 
+   //Add student data to list with class of student-list
    studentList.insertAdjacentHTML('beforeEnd', studentHTML);
 
 }
@@ -52,8 +55,58 @@ const showPage = (list, page) => {
 Create the `addPagination` function
 This function will create and insert/append the elements needed for the pagination buttons
 */
+const addPagination = (list, numPerPage) => {
+   //Calculates number of buttons based on dataset length divided by page count and rounds up to nearest integer
+   const numOfButtons = Math.ceil(list.length / pageCount);
+   const linkList = document.querySelector('ul.link-list');
 
+   //Remove any buttons that are currently on the page
+   linkList.innerHTML = '';
+
+   let buttonHTML = '';
+
+   //Loop through total number of buttons and add button element to the page
+   for (let i = 1; i <= numOfButtons; i++) {
+      buttonHTML += 
+      `
+      <li>
+         <button type="button">${i}</button>
+      </li>
+      `;
+   }
+
+   //Add pagination buttons to list with class of link-list
+   linkList.insertAdjacentHTML('beforeEnd', buttonHTML);
+
+   //Add class of Active to first button
+   const firstButton = document.querySelector('.link-list button');
+   firstButton.classList.add('active');
+
+   //Add Event Listener to all Pagination Buttons
+   linkList.addEventListener ('click', (e) => {
+      if (e.target.nodeName === 'BUTTON') {
+         const paginationButtons = document.querySelectorAll('.link-list button');
+
+         //Remove active class from all buttons
+         paginationButtons.forEach(button => {
+            button.classList.remove('active');
+         });
+
+         //Add active class to clicked button
+         e.target.classList.add('active');
+
+         //Grab number from button that was clicked
+         const currentButton = e.target.innerText;
+
+         //Run showPage function for current button
+         showPage(list, currentButton, pageCount);
+
+      }
+   })
+}
 
 
 // Call functions
-showPage(data, 1);
+showPage(data, 1, pageCount);
+
+addPagination(data, pageCount);
