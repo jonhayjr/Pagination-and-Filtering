@@ -3,4 +3,4 @@
 This project uses JavaScript to paginate student data on separate pages based on the total number of students.
 
 Click here to preview.
-http://jonhayjr.com/Treehouse-FSJS-Project2
+http://jonhayjr.com/Pagination-and-Filtering
