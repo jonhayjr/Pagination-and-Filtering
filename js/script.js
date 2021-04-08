@@ -175,8 +175,8 @@ const showStudents = (list) => {
 
 //Add event listener to header when input field is clicked
 header.addEventListener('click', (e) => {
-   //Check to make sure selected element is input field
-   if (e.target.nodeName === 'INPUT') {
+   //Check to make sure selected element is input field and that there is a value
+   if (e.target.nodeName === 'INPUT' && e.target.value !== '') {
       //Store search results in variable
       const newList = searchForStudents(list);
 
@@ -203,4 +203,3 @@ addPagination(data, pageCount);
 addSearchBar();
 
 showStudents(data);
-
