@@ -46,7 +46,6 @@ const showPage = (list, page, numPerPage) => {
 
    //Add student data to list with class of student-list
    studentList.insertAdjacentHTML('beforeEnd', studentHTML);
-
 }
 
 
@@ -135,7 +134,7 @@ const searchForStudents = (list) => {
    return newList;
    };
 
-//showNoRecordsFound displays No Records Found test on page.
+//showNoRecordsFound displays No Records Found text on page.
    const showNoRecordsFound = () => {
       const linkList = document.querySelector('ul.link-list');
       const studentList = document.querySelector('ul.student-list');
@@ -150,46 +149,42 @@ const searchForStudents = (list) => {
       studentList.innerHTML = 'No Records Found.';
    }
 
-//showStudents display search results on page
-const showStudents = (list) => {
+//Shows student data on page.  If there is no student, page will show 'No Records Found.'
+   const showStudents = (list) => {
+       //Store search results in variable
+       const newList = searchForStudents(list);
+
+       //Checks if search results array is empty or not.  
+       if (Array.isArray(newList) && newList.length) {
+          //If array isn't empty, results are outputted to screen.
+          addPagination(newList, pageCount);
+          showPage(newList, 1, pageCount);
+       } else {
+          //If array is empty, text of No Records Found
+          showNoRecordsFound();
+       }
+ };
+   
+
+//Student search event handler function
+const handleStudentSearch = (list) => {
    const header = document.querySelector('header');
 
    //Add event listener to header and see if input is selected
    header.addEventListener('keyup', (e) => {
       //Check to make sure selected element is input field
       if (e.target.nodeName === 'INPUT') {
-         //Store search results in variable
-         const newList = searchForStudents(list);
+         showStudents(list);
+      };
+   });
 
-         //Checks if search results array is empty or not.  
-         if (Array.isArray(newList) && newList.length) {
-            //If array isn't empty, results are outputted to screen.
-            addPagination(newList, pageCount);
-            showPage(newList, 1, pageCount);
-         } else {
-            //If array is empty, text of No Records Found
-            showNoRecordsFound();
-         }
-   };
-});
 
 //Add event listener to header when input field is clicked
 header.addEventListener('click', (e) => {
    //Check to make sure selected element is input field and that there is a value
    if (e.target.nodeName === 'INPUT' && e.target.value !== '') {
-      //Store search results in variable
-      const newList = searchForStudents(list);
-
-      //Checks if search results array is empty or not.  
-      if (Array.isArray(newList) && newList.length) {
-         //If array isn't empty, results are outputted to screen.
-         addPagination(newList, pageCount);
-         showPage(newList, 1, pageCount);
-      } else {
-         //If array is empty, text of No Records Found
-         showNoRecordsFound();
-      }
-};
+      showStudents(list);
+   };
 });
    
 }
@@ -202,4 +197,6 @@ addPagination(data, pageCount);
 
 addSearchBar();
 
-showStudents(data);
+handleStudentSearch(data);
+
+
